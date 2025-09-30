@@ -4,7 +4,12 @@ import  dotenv from "dotenv";
 import {initDB} from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 import transactionsRouter from "./routes/transactionsRoute.js";
+import job from "./config/cron.js";
 
+// Start the cron job to keep the server awake
+if(process.env.NODE_ENV==="production") job.start();
+
+//configure env variables
 dotenv.config();
 const app=express();
 const PORT= process.env.PORT;
@@ -27,11 +32,10 @@ app.use("/api/transactions", transactionsRouter);
 //app.use("/api/products ",productRouters) , add modularity to the server.js
 
 
-/*
-app.get("/health-check",(req,res)=>{
-    res.send("It's is working ");
+app.get("/api/health-check",(req,res)=>{
+    res.status(200).json({message:"Server is healthy"});
 });
-*/
+
 
 
 
